@@ -22,8 +22,8 @@ function bindTopbar() {
   document.getElementById("btn-add-zone").onclick = () => {
     const z = store.addZone({
       name: `Zone ${store.state.zones.length + 1}`,
-      x: 60 + Math.random() * 80,
-      y: 60 + Math.random() * 60,
+      x: 60,
+      y: 60,
       w: 320,
       h: 220
     });
