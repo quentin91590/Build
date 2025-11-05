@@ -1,0 +1,9 @@
+{
+  "name": "Building 2D",
+  "short_name": "Building2D",
+  "start_url": ".",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#111827",
+  "icons": []
+}
