@@ -1,7 +1,7 @@
-import { initStore, loadFromStorage, saveToStorage } from "./js/store.js";
-import { initCanvas, drawAll, attachCanvasEvents } from "./js/canvas.js";
-import { renderPalette } from "./js/palette.js";
-import { renderInspector, bindInspector } from "./js/inspector.js";
+import { initStore, loadFromStorage, saveToStorage } from "./store.js";
+import { initCanvas, drawAll, attachCanvasEvents } from "./canvas.js";
+import { renderPalette } from "./palette.js";
+import { renderInspector } from "./inspector.js";
 
 const stage = document.getElementById("stage");
 const palette = document.getElementById("palette");
@@ -13,34 +13,62 @@ loadFromStorage(store);
 renderPalette(palette, store);
 renderInspector(inspector, store);
 initCanvas(stage, store);
-attachCanvasEvents(stage, store);
+attachCanvasEvents(stage, store, inspector);
 drawAll(stage, store);
 bindTopbar();
 autoSave();
 
-function bindTopbar(){
+function bindTopbar() {
   document.getElementById("btn-add-zone").onclick = () => {
-    const z = store.addZone({ name:"Zone", x:60+Math.random()*80, y:60+Math.random()*60, w:320, h:220 });
-    status.textContent = `Zone ajoutée: ${z.name}`;
+    const z = store.addZone({
+      name: `Zone ${store.state.zones.length + 1}`,
+      x: 60 + Math.random() * 80,
+      y: 60 + Math.random() * 60,
+      w: 320,
+      h: 220
+    });
+    store.select(z.id);
     drawAll(stage, store);
     renderInspector(inspector, store);
+    status.textContent = `Zone ajoutée : ${z.name}`;
   };
+
   document.getElementById("btn-export").onclick = () => {
-    const blob = new Blob([JSON.stringify(store.snapshot(), null, 2)], {type:"application/json"});
-    const a = Object.assign(document.createElement("a"), {href:URL.createObjectURL(blob), download:"building.json"});
-    a.click(); URL.revokeObjectURL(a.href);
+    const blob = new Blob([JSON.stringify(store.snapshot(), null, 2)], {
+      type: "application/json"
+    });
+    const a = Object.assign(document.createElement("a"), {
+      href: URL.createObjectURL(blob),
+      download: "app-2d.json"
+    });
+    a.click();
+    URL.revokeObjectURL(a.href);
+    status.textContent = "Export réalisé";
   };
-  document.getElementById("btn-import").onclick = async () => {
-    const input = Object.assign(document.createElement("input"), {type:"file", accept:".json"});
+
+  document.getElementById("btn-import").onclick = () => {
+    const input = Object.assign(document.createElement("input"), {
+      type: "file",
+      accept: ".json"
+    });
     input.onchange = async () => {
-      const txt = await input.files[0].text();
-      store.replace(JSON.parse(txt));
-      drawAll(stage, store); renderInspector(inspector, store); status.textContent="Import OK";
+      try {
+        const txt = await input.files[0].text();
+        const snapshot = JSON.parse(txt);
+        store.replace(snapshot);
+        drawAll(stage, store);
+        renderPalette(palette, store);
+        renderInspector(inspector, store);
+        status.textContent = "Import réussi";
+      } catch (err) {
+        console.error(err);
+        status.textContent = "Import impossible";
+      }
     };
     input.click();
   };
 }
 
-function autoSave(){
-  setInterval(()=> saveToStorage(store), 1000);
+function autoSave() {
+  setInterval(() => saveToStorage(store), 1000);
 }

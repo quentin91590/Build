@@ -3,26 +3,26 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Building 2D – Sandbox</title>
-  <link rel="manifest" href="manifest.webmanifest">
-  <link rel="stylesheet" href="styles.css" />
+  <title>app-2d – Constructeur de bâtiment</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <header class="topbar">
-    <h1>Building 2D</h1>
+    <h1>app-2d</h1>
     <div class="actions">
       <button id="btn-add-zone" title="Ajouter une zone">+ Zone</button>
-      <button id="btn-export">Exporter JSON</button>
-      <button id="btn-import">Importer JSON</button>
+      <button id="btn-export" title="Exporter la configuration au format JSON">Exporter JSON</button>
+      <button id="btn-import" title="Importer une configuration JSON">Importer JSON</button>
     </div>
   </header>
 
   <main class="layout">
-    <aside class="panel panel-left" id="palette"></aside>
+    <aside class="panel panel-left" id="palette" aria-label="Palette des composants"></aside>
     <section class="canvas-wrap">
-      <canvas id="stage" width="1200" height="700" aria-label="Surface de construction"></canvas>
+      <canvas id="stage" width="1200" height="700" aria-label="Surface de construction 2D" role="img"></canvas>
     </section>
-    <aside class="panel panel-right" id="inspector"></aside>
+    <aside class="panel panel-right" id="inspector" aria-label="Inspecteur"></aside>
   </main>
 
   <footer class="statusbar">
@@ -30,6 +30,5 @@
   </footer>
 
   <script type="module" src="app.js"></script>
-  <svg style="display:none"><?xml version="1.0"?></svg>
 </body>
 </html>
